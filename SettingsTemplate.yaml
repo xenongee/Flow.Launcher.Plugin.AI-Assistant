@@ -1,16 +1,23 @@
 body:
 
+    - type: input
+      attributes:
+          name: api_url
+          label: "LLM API Provider URL:"
+          defaultValue: "https://openrouter.ai/api/v1/chat/completions"
+          description: "Select the AI model to use for queries"
+
     - type: passwordBox
       attributes:
           name: api_key
-          label: "OpenRouter API Key:"
-          description: "API key for OpenRouter - it is recommended to set your OPENROUTER_API_KEY environment variable key instead"
+          label: "LLM API Provider API Key:"
+          description: "API key for your LLM API provider - it is recommended to set the API key as an environment variable instead."
 
     - type: input
       attributes:
           name: default_model
           label: "Default AI Model:"
-          defaultValue: "deepseek/deepseek-chat:free"
+          defaultValue: "mistralai/mistral-small-3.2-24b-instruct:free"
           description: "Select the AI model to use for queries"
 
     - type: input
@@ -19,3 +26,4 @@ body:
           label: "Prompt Delimiter:"
           description: "Symbol that indicates when to send the prompt"
           defaultValue: "||"
+

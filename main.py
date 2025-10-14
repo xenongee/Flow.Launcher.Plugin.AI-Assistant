@@ -16,7 +16,8 @@ from pyflowlauncher import Plugin, Result, send_results
 from pyflowlauncher.result import ResultResponse
 from pyflowlauncher.settings import settings
 
-DEFAULT_MODEL = "deepseek/deepseek-chat:free"
+DEFAULT_LLM_PROVIDER_URL = "https://openrouter.ai/api/v1/chat/completions"
+DEFAULT_MODEL = "mistralai/mistral-small-3.2-24b-instruct:free"
 DEFAULT_DELIMITER = "||"
 
 # Flag to force settings API key test - set to True when testing
@@ -39,24 +40,24 @@ def get_settings(key=None, default=None):
     Get settings with environment variable priority for API key.
     """
     global _settings_cache
-    
+
     # Try to get current settings
     current_settings = settings()
-    
+
     # If settings is available, update cache
     if current_settings is not None:
         _settings_cache.update(current_settings)
-    
+
     # Special case for API key - prioritize environment variable
     if key == "api_key":
         env_api_key = get_env_api_key()
         if env_api_key:
             return env_api_key
-    
+
     # If a specific key is requested
     if key is not None:
         return _settings_cache.get(key, default)
-    
+
     # Return all settings
     return _settings_cache
 
@@ -77,10 +78,11 @@ plugin = Plugin()
 def query(query: str) -> ResultResponse:
     """Main entry point for the plugin."""
     # Get settings using our cache mechanism
+    api_provider_url = get_settings("api_url", DEFAULT_LLM_PROVIDER_URL)
     api_key = get_settings("api_key", "")
     default_model = get_settings("default_model", DEFAULT_MODEL)
     delimiter = get_settings("delimiter", DEFAULT_DELIMITER)
-    
+
     if not query.strip():
         return send_results([
             Result(
@@ -89,11 +91,11 @@ def query(query: str) -> ResultResponse:
                 IcoPath="Images/app.png"
             )
         ])
-    
+
     # Execute only if delimiter is present
     if delimiter in query:
         query = query.split(delimiter, 1)[0].strip()
-        
+
         if not api_key:
             return send_results([
                 Result(
@@ -102,11 +104,11 @@ def query(query: str) -> ResultResponse:
                     IcoPath="Images/app.png"
                 )
             ])
-        
+
         # Make the API call
         try:
             response = requests.post(
-                "https://openrouter.ai/api/v1/chat/completions",
+                api_provider_url,
                 headers={
                     "Authorization": f"Bearer {api_key}",
                     "Content-Type": "application/json",
@@ -120,11 +122,11 @@ def query(query: str) -> ResultResponse:
                     ]
                 }
             )
-            
+
             if response.status_code == 200:
                 result = response.json()
                 answer = result["choices"][0]["message"]["content"]
-                
+
                 # Show result with actions
                 preview = answer[:100] + "..." if len(answer) > 100 else answer
                 return send_results([
@@ -166,7 +168,7 @@ def query(query: str) -> ResultResponse:
                     IcoPath="Images/app.png"
                 )
             ])
-    
+
     # Just preview when typing, no Enter execution
     return send_results([
         Result(
@@ -183,7 +185,7 @@ def copy_to_clipboard(text: str) -> ResultResponse:
     try:
         import pyperclip
         pyperclip.copy(text)
-        
+
         return send_results([
             Result(
                 Title="Copied to clipboard",
@@ -209,7 +211,7 @@ def open_in_notepad(text: str) -> None:
         fd, path = tempfile.mkstemp(suffix=".txt", prefix="ai_response_")
         with os.fdopen(fd, 'w', encoding='utf-8') as f:
             f.write(text)
-        
+
         # Open the file with notepad using subprocess
         subprocess.Popen(["notepad.exe", path])
     except Exception as e:
