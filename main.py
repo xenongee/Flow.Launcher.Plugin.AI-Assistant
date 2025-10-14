@@ -83,6 +83,9 @@ def query(query: str) -> ResultResponse:
     api_key = get_settings("api_key", "")
     default_model = get_settings("default_model", DEFAULT_MODEL)
     delimiter = get_settings("delimiter", DEFAULT_DELIMITER)
+    if not default_model:
+        default_model = DEFAULT_MODEL
+    system_prompt = get_settings("system_prompt", DEFAULT_SYSTEM_PROMPT)
 
     if not query.strip():
         return send_results([
@@ -120,8 +123,8 @@ def query(query: str) -> ResultResponse:
                 headers={
                     "Authorization": f"Bearer {api_key}",
                     "Content-Type": "application/json",
-                    "HTTP-Referer": "flow-launcher-plugin",
-                    "X-Title": "AI Assistant Flow Launcher Plugin"
+                    "HTTP-Referer": "https://github.com/xenongee/Flow.Launcher.Plugin.AI-Assistant",
+                    "X-Title": "AI Assistant - Flow Launcher Plugin"
                 },
                 json={
                     "model": default_model,

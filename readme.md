@@ -1,12 +1,13 @@
-# Flow.Launcher.Plugin.ai
-A Flow Launcher plugin that connects to OpenRouter AI models, allowing you to quickly query AI models directly from your launcher.
+# Flow.Launcher.Plugin.AI-Assistant
+The Flow Launcher plugin connects to the desired model via any OpenAI API-compatible provider (such as OpenRouter), allowing you to quickly ask the AI model anything directly from your launcher.
 
 ## Features
 - Query AI models directly from Flow Launcher
 - Uses delimiter-based command pattern (`||`) to trigger queries
 - API key can be set via environment variable for security
 - Results can be copied to clipboard or opened in Notepad
-- Supports multiple AI models through OpenRouter
+- Supports multiple AI models through OpenAI API-compatible providers
+- Customizable system prompt
 
 ## Installation
 ### Method 1: Via Flow Launcher
@@ -24,7 +25,7 @@ A Flow Launcher plugin that connects to OpenRouter AI models, allowing you to qu
 4. Click "Install"
 
 ### Method 3: Manual Installation
-1. Download the latest release from the [Releases page](https://github.com/ShamanicArts/Flow.Launcher.Plugin.AI-Assistant/releases) 
+1. Download the latest release from the [Releases page](https://github.com/ShamanicArts/Flow.Launcher.Plugin.AI-Assistant/releases)
 2. Extract the zip file to `%APPDATA%\FlowLauncher\Plugins`
 3. Restart Flow Launcher
 
@@ -57,7 +58,7 @@ The plugin supports the following settings:
 
 ### Viewing the Result in Notepad
  3. If you choose to open the response in Notepad:
-    
+
     ![Result opened in Notepad](images/ai-devito-text-result.png)
 
 ### Example Queries
