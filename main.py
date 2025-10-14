@@ -34,7 +34,7 @@ def get_env_api_key():
     """
     if FORCE_SETTINGS_API_KEY:
         return None
-    return os.environ.get("OPENROUTER_API_KEY")
+    return os.environ.get("FLOWLLM_API_KEY")
 
 def get_settings(key=None, default=None):
     """
