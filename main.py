@@ -19,6 +19,7 @@ from pyflowlauncher.settings import settings
 DEFAULT_LLM_PROVIDER_URL = "https://openrouter.ai/api/v1/chat/completions"
 DEFAULT_MODEL = "mistralai/mistral-small-3.2-24b-instruct:free"
 DEFAULT_DELIMITER = "||"
+DEFAULT_SYSTEM_PROMPT = "You are an assistant providing concise, factually accurate responses with no formatting. Reply ONLY with a plain-text answer: no markdown, lists, explanations, or extra text. Prioritize brevity and precise truth above all else."
 
 # Flag to force settings API key test - set to True when testing
 FORCE_SETTINGS_API_KEY = False
@@ -105,6 +106,13 @@ def query(query: str) -> ResultResponse:
                 )
             ])
 
+        model_messages = []
+
+        if system_prompt.strip():
+            model_messages.append({"role": "system", "content": system_prompt})
+
+        model_messages.append({"role": "user", "content": query})
+
         # Make the API call
         try:
             response = requests.post(
@@ -117,9 +125,7 @@ def query(query: str) -> ResultResponse:
                 },
                 json={
                     "model": default_model,
-                    "messages": [
-                        {"role": "user", "content": query}
-                    ]
+                    "messages": model_messages,
                 }
             )
 

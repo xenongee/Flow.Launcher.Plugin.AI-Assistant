@@ -4,8 +4,8 @@ body:
       attributes:
           name: api_url
           label: "LLM API Provider URL:"
-          defaultValue: "https://openrouter.ai/api/v1/chat/completions"
           description: "Select the AI model to use for queries"
+          defaultValue: "https://openrouter.ai/api/v1/chat/completions"
 
     - type: passwordBox
       attributes:
@@ -17,8 +17,15 @@ body:
       attributes:
           name: default_model
           label: "Default AI Model:"
-          defaultValue: "mistralai/mistral-small-3.2-24b-instruct:free"
           description: "Select the AI model to use for queries"
+          defaultValue: "mistralai/mistral-small-3.2-24b-instruct:free"
+
+    - type: input
+      attributes:
+        name: system_prompt
+        label: "System Prompt:"
+        description: "System prompt to use for the AI"
+        defaultValue: "You are an assistant providing concise, factually accurate responses with no formatting. Reply ONLY with a plain-text answer: no markdown, lists, explanations, or extra text. Prioritize brevity and precise truth above all else."
 
     - type: input
       attributes:
@@ -26,4 +33,3 @@ body:
           label: "Prompt Delimiter:"
           description: "Symbol that indicates when to send the prompt"
           defaultValue: "||"
-
