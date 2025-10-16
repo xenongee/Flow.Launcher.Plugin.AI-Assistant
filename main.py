@@ -139,7 +139,8 @@ def query(query: str) -> ResultResponse:
                     "reasoning": {
                         "enabled": reasoning
                     }
-                }
+                },
+                timeout=30
             )
 
             if response.status_code == 200:
