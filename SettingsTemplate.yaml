@@ -4,7 +4,7 @@ body:
       attributes:
           name: api_url
           label: "LLM API Provider URL:"
-          description: "Select the AI model to use for queries"
+          description: "URL of the OpenAI-compatible API provider"
           defaultValue: "https://openrouter.ai/api/v1/chat/completions"
 
     - type: passwordBox
