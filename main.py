@@ -7,8 +7,7 @@ plugindir = Path.absolute(Path(__file__).parent)
 paths = (".", "lib", "plugin")
 sys.path = [str(plugindir / p) for p in paths] + sys.path
 
-import json
-import webbrowser
+import re
 import tempfile
 import subprocess
 import requests
@@ -19,7 +18,8 @@ from pyflowlauncher.settings import settings
 DEFAULT_LLM_PROVIDER_URL = "https://openrouter.ai/api/v1/chat/completions"
 DEFAULT_MODEL = "mistralai/mistral-small-3.2-24b-instruct:free"
 DEFAULT_DELIMITER = "||"
-DEFAULT_SYSTEM_PROMPT = "You are an assistant providing concise, factually accurate responses with no formatting. Reply ONLY with a plain-text answer: no markdown, lists, explanations, or extra text. Prioritize brevity and precise truth above all else."
+DEFAULT_SYSTEM_PROMPT = "You are an assistant providing concise, factually accurate responses with no formatting. Reply only with a plain-text answer: no markdown, lists, explanations, or extra text. Prioritize brevity and precise truth above all else. If a user asks a question that can be answered in the terminal, only provide commands."
+DEFAULT_TEXT_EDITOR = r"notepad.exe"
 
 # Flag to force settings API key test - set to True when testing
 FORCE_SETTINGS_API_KEY = False
@@ -90,6 +90,9 @@ def query(query: str) -> ResultResponse:
     default_model = get_settings("default_model", DEFAULT_MODEL)
     delimiter = get_settings("delimiter", DEFAULT_DELIMITER)
     system_prompt = get_settings("system_prompt", DEFAULT_SYSTEM_PROMPT)
+    reasoning = get_settings("reasoning", True)
+    full_response = get_settings("full_response", True)
+    text_editor = get_settings("text_editor", DEFAULT_TEXT_EDITOR)
 
     if not query.strip():
         return send_results([
@@ -108,7 +111,7 @@ def query(query: str) -> ResultResponse:
             return send_results([
                 Result(
                     Title="API Key not set",
-                    SubTitle="Set OPENROUTER_API_KEY environment variable",
+                    SubTitle="Set FLOWLLM_API_KEY environment variable",
                     IcoPath="Images/app.png"
                 )
             ])
@@ -133,6 +136,9 @@ def query(query: str) -> ResultResponse:
                 json={
                     "model": default_model,
                     "messages": model_messages,
+                    "reasoning": {
+                        "enabled": reasoning
+                    }
                 }
             )
 
@@ -142,25 +148,35 @@ def query(query: str) -> ResultResponse:
 
                 # Show result with actions
                 preview = answer[:100] + "..." if len(answer) > 100 else answer
+
+                if full_response:
+                    subtitle = answer
+                else:
+                    subtitle = preview
+
+                subtitle = re.sub(r'[\s]+', ' ', subtitle).strip()
+
                 return send_results([
                     Result(
-                        Title="AI Response",
-                        SubTitle=preview,
+                        Title=f"AI Response ({default_model})",
+                        SubTitle=subtitle,
                         IcoPath="Images/app.png",
                         JsonRPCAction={
                             "method": "copy_to_clipboard",
                             "parameters": [answer]
                         },
-                        ContextData=answer
+                        ContextData=[answer, text_editor],
+                        Score=100
                     ),
                     Result(
-                        Title="Open in Notepad",
-                        SubTitle="Open the full response in Notepad",
-                        IcoPath="Images/app.png",
+                        Title=f"Open in {Path(text_editor).stem}",
+                        SubTitle=f"Open the full response in {Path(text_editor).stem}",
+                        IcoPath="Images/note.png",
                         JsonRPCAction={
                             "method": "open_in_notepad",
-                            "parameters": [answer]
-                        }
+                            "parameters": [answer, text_editor]
+                        },
+                        ContextData=[answer, text_editor]
                     )
                 ])
             else:
@@ -203,7 +219,7 @@ def copy_to_clipboard(text: str) -> ResultResponse:
             Result(
                 Title="Copied to clipboard",
                 SubTitle=text[:100] + "..." if len(text) > 100 else text,
-                IcoPath="Images/app.png"
+                IcoPath="Images/copy.png"
             )
         ])
     except ImportError:
@@ -217,16 +233,21 @@ def copy_to_clipboard(text: str) -> ResultResponse:
 
 
 @plugin.on_method
-def open_in_notepad(text: str) -> None:
+def open_in_notepad(text: str, text_editor: str) -> None:
     """Open text in notepad - properly implemented to actually open notepad."""
+    if not text_editor or not text_editor.strip():
+        text_editor = DEFAULT_TEXT_EDITOR
+
     try:
+        text_editor = os.path.normpath(text_editor)
+
         # Create a temporary file with the text content
         fd, path = tempfile.mkstemp(suffix=".txt", prefix="ai_response_")
         with os.fdopen(fd, 'w', encoding='utf-8') as f:
             f.write(text)
 
         # Open the file with notepad using subprocess
-        subprocess.Popen(["notepad.exe", path])
+        subprocess.Popen([text_editor, path])
     except Exception as e:
         print(f"Error opening notepad: {e}")
 
@@ -234,23 +255,30 @@ def open_in_notepad(text: str) -> None:
 @plugin.on_method
 def context_menu(data: str) -> ResultResponse:
     """Context menu for showing additional actions on results."""
+    if isinstance(data, list) and len(data) >= 2:
+        answer = data[0]
+        text_editor = data[1]
+    else:
+        answer = data if isinstance(data, str) else str(data)
+        text_editor = DEFAULT_TEXT_EDITOR
+
     return send_results([
         Result(
             Title="Copy to clipboard",
             SubTitle="Copy the full response to clipboard",
-            IcoPath="Images/app.png",
+            IcoPath="Images/copy.png",
             JsonRPCAction={
                 "method": "copy_to_clipboard",
-                "parameters": [data]
+                "parameters": [answer]
             }
         ),
         Result(
-            Title="Open in Notepad",
-            SubTitle="Open the full response in Notepad for viewing/editing",
-            IcoPath="Images/app.png",
+            Title=f"Open in {Path(text_editor).stem}",
+            SubTitle=f"Open the full response in {Path(text_editor).stem} for viewing/editing",
+            IcoPath="Images/note.png",
             JsonRPCAction={
                 "method": "open_in_notepad",
-                "parameters": [data]
+                "parameters": [answer, text_editor]
             }
         )
     ])

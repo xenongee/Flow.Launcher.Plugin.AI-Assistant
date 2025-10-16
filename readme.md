@@ -8,6 +8,8 @@ The Flow Launcher plugin connects to the desired model via any OpenAI API-compat
 - Results can be copied to clipboard or opened in Notepad
 - Supports multiple AI models through OpenAI API-compatible providers
 - Customizable system prompt
+- Can change the text editor to another text editor
+- Ability to enable/disable reasoning mode
 
 ## Installation
 ### Method 1: Via Flow Launcher
@@ -32,7 +34,7 @@ The Flow Launcher plugin connects to the desired model via any OpenAI API-compat
 ## Configuration
 ### Setting the API Key
 For security, your OpenRouter API key should be set as an environment variable:
-1. Create an environment variable named `OPENROUTER_API_KEY` with your API key from [OpenRouter](https://openrouter.ai/keys)
+1. Create an environment variable named `FLOWLLM_API_KEY` with your API key from [OpenRouter](https://openrouter.ai/keys) or another OpenAI-compatible provider.
 2. Restart Flow Launcher to apply the changes
 
 ### Settings

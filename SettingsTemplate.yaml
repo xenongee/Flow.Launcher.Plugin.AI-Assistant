@@ -20,12 +20,19 @@ body:
           description: "Select the AI model to use for queries"
           defaultValue: "mistralai/mistral-small-3.2-24b-instruct:free"
 
-    - type: input
+    - type: textarea
       attributes:
         name: system_prompt
         label: "System Prompt:"
         description: "System prompt to use for the AI"
         defaultValue: "You are an assistant providing concise, factually accurate responses with no formatting. Reply ONLY with a plain-text answer: no markdown, lists, explanations, or extra text. Prioritize brevity and precise truth above all else."
+
+    - type: checkbox
+      attributes:
+        name: reasoning
+        label: "Enable reasoning:"
+        description: "Enable reasoning mode"
+        defaultValue: true
 
     - type: input
       attributes:
@@ -33,3 +40,17 @@ body:
           label: "Prompt Delimiter:"
           description: "Symbol that indicates when to send the prompt"
           defaultValue: "||"
+
+    - type: checkbox
+      attributes:
+        name: full_response
+        label: "Show the full AI response:"
+        description: "Show the full AI response in the subtitle"
+        defaultValue: true
+
+    - type: input
+      attributes:
+          name: text_editor
+          label: "Text editor:"
+          description: "Enter the path to your preferred text editor"
+          defaultValue: "notepad.exe"
