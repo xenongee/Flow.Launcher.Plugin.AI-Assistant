@@ -242,6 +242,11 @@ def open_in_notepad(text: str, text_editor: str) -> None:
     try:
         text_editor = os.path.normpath(text_editor)
 
+        # Validate that the editor executable exists
+        if not os.path.isfile(text_editor):
+            print(f"Error: Text editor not found: {text_editor}")
+            return
+
         # Create a temporary file with the text content
         fd, path = tempfile.mkstemp(suffix=".txt", prefix="ai_response_")
         with os.fdopen(fd, 'w', encoding='utf-8') as f:
