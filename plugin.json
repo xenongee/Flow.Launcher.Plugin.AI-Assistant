@@ -2,12 +2,11 @@
   "ID": "8226842d-f2e2-4159-940c-966666ce7b44",
   "ActionKeyword": "ai",
   "Name": "AI Assistant",
-  "Description": "Query OpenRouter AI models directly from Flow Launcher",
+  "Description": "Query AI models via any OpenAI-compatible provider directly from Flow Launcher",
   "Author": "Lucas Shamanic, xenongee",
-  "Version": "0.0.4",
+  "Version": "0.0.6",
   "Language": "python",
   "Website": "https://github.com/shamanicvocalarts/Flow.Launcher.Plugin.AI-Assistant",
   "IcoPath": "images/app.png",
   "ExecuteFileName": "main.py"
-
 }
