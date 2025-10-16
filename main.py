@@ -57,7 +57,13 @@ def get_settings(key=None, default=None):
 
     # If a specific key is requested
     if key is not None:
-        return _settings_cache.get(key, default)
+        value = _settings_cache.get(key, default)
+
+        if not value:
+            value = default
+
+        return value
+
 
     # Return all settings
     return _settings_cache
@@ -83,8 +89,6 @@ def query(query: str) -> ResultResponse:
     api_key = get_settings("api_key", "")
     default_model = get_settings("default_model", DEFAULT_MODEL)
     delimiter = get_settings("delimiter", DEFAULT_DELIMITER)
-    if not default_model:
-        default_model = DEFAULT_MODEL
     system_prompt = get_settings("system_prompt", DEFAULT_SYSTEM_PROMPT)
 
     if not query.strip():
