@@ -204,7 +204,12 @@ def query(query: str) -> ResultResponse:
         Result(
             Title=f"Ask AI: {query}",
             SubTitle=f"Add '{delimiter}' to send to {default_model}",
-            IcoPath="Images/app.png"
+            IcoPath="Images/app.png",
+            JsonRPCAction={
+                "method": "copy_to_clipboard",
+                "parameters": [query]
+            },
+            ContextData=query
         )
     ])
 

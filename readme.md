@@ -69,7 +69,7 @@ The plugin supports the following settings:
 - `ai What's the capital of France? ||`
 
 ## Troubleshooting
-- **API Key not set**: Make sure the `OPENROUTER_API_KEY` environment variable is set correctly
+- **API Key not set**: Make sure the `FLOWLLM_API_KEY` environment variable is set correctly
 - **No response**: Ensure you're adding the delimiter (`||`) at the end of your query
 - **Models not loading**: Check your internet connection and API key validity
 
