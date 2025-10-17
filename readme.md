@@ -1,4 +1,6 @@
-# Flow.Launcher.Plugin.AI-Assistant
+# Flow.Launcher.Plugin.AI-Assistant-Enhanced
+This repository is a fork of [ShamanicArts/Flow.Launcher.Plugin.AI-Assistant](https://github.com/ShamanicArts/Flow.Launcher.Plugin.AI-Assistant).
+
 The Flow Launcher plugin connects to the desired model via any OpenAI API-compatible provider (such as OpenRouter), allowing you to quickly ask the AI model anything directly from your launcher.
 
 ## Features
@@ -12,22 +14,21 @@ The Flow Launcher plugin connects to the desired model via any OpenAI API-compat
 - Ability to enable/disable reasoning mode
 
 ## Installation
-### Method 1: Via Flow Launcher
-1. Open Flow Launcher
-2. Type the following command:
-   ```
-   pm install AI Assistant
-   ```
-3. Press Enter to install
+~~### Method 1: Via Flow Launcher (Deprecated for this fork)~~
+1. ~~Open Flow Launcher~~
+2. ~~Type the following command: pm install AI Assistant~~
+3. ~~Press Enter to install~~
 
-### Method 2: Plugin Store
-1. Open Flow Launcher Settings
-2. Navigate to the "Plugin Store" tab
-3. Search for "AI Assistant"
-4. Click "Install"
+~~### Method 2: Plugin Store (Deprecated for this fork)~~
+1. ~~Open Flow Launcher Settings~~
+2. ~~Navigate to the "Plugin Store" tab~~
+3. ~~Search for "AI Assistant"~~
+4. ~~Click "Install"~~
+
+**Note:** These methods do not work with this fork; you will install the original version this way.
 
 ### Method 3: Manual Installation
-1. Download the latest release from the [Releases page](https://github.com/ShamanicArts/Flow.Launcher.Plugin.AI-Assistant/releases)
+1. Download the latest release from the [Releases page](https://github.com/xenongee/Flow.Launcher.Plugin.AI-Assistant-Enhanced/releases)
 2. Extract the zip file to `%APPDATA%\FlowLauncher\Plugins`
 3. Restart Flow Launcher
 
